@@ -26,6 +26,9 @@ namespace aplimat_labs
         public MainWindow()
         {
             InitializeComponent();
+            this.KeyDown += new KeyEventHandler(MainWindow_KeyDown);
+            myVector = a - b;
+            Console.WriteLine(myVector.getMagnitude());
 
             //while (true) Console.WriteLine(rng.Generate());
         }
@@ -33,38 +36,58 @@ namespace aplimat_labs
         private CubeMesh myCube = new CubeMesh();
         private Randomizer rng = new Randomizer(-1, 1);
         private Vector3 velocity = new Vector3(1, 1, 0);
+        private float speed = 2.0f;
+
+        private Vector3 myVector = new Vector3();
+        private Vector3 a = new Vector3(0, 0, 0);
+        private Vector3 b = new Vector3(5, 7, 0);
 
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
             OpenGL gl = args.OpenGL;
             
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
-
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -40.0f);
 
-            myCube.Position += velocity;
+            gl.LineWidth(4);
+            gl.Color(1.0f, 0.0f, 1.0f);
+            gl.Begin(OpenGL.GL_LINE_STRIP);
+            gl.Vertex(a.x, a.y);
+            gl.Vertex(b.x, b.y);
+            gl.End();
 
-            if(myCube.Position.x > 25)
-            {
-                velocity.x -= 1;
-            }
+            gl.LineWidth(1);
+            gl.Begin(OpenGL.GL_LINE_STRIP);
+            gl.Vertex(a.x, a.y);
+            gl.Vertex(b.x, b.y);
+            gl.End();
 
-            else if(myCube.Position.x < -25)
-            {
-                velocity.x += 1;
-            }
+            
 
-            else if (myCube.Position.y > 15)
-            {
-                velocity.y -= 1;
-            }
+            gl.DrawText(0, 0, 1, 1, 1, "Arial", 15, "Lightsaber magnitude is: " + myVector.getMagnitude());
 
-            else if (myCube.Position.y < -15)
+        }
+
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
             {
-                velocity.y += 1;
+                case Key.W:
+                    b.y += 1;
+                    break;
+                case Key.A:
+                    b.x -= 1;
+                    break;
+                case Key.S:
+                    b.x += 1;
+                    break;
+                case Key.D:
+                    b.y -= 1;
+                    break;
+                default:
+                    break;
             }
-            myCube.Draw(gl);
         }
 
         private void OpenGLControl_OpenGLInitialized(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
@@ -87,8 +110,8 @@ namespace aplimat_labs
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_AMBIENT, light0ambient);
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_DIFFUSE, light0diffuse);
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPECULAR, light0specular);
-            gl.Enable(OpenGL.GL_LIGHTING);
-            gl.Enable(OpenGL.GL_LIGHT0);
+            gl.Disable(OpenGL.GL_LIGHTING);
+            gl.Disable(OpenGL.GL_LIGHT0);
 
             gl.ShadeModel(OpenGL.GL_SMOOTH);
         }
