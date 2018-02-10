@@ -32,19 +32,38 @@ namespace aplimat_labs
 
         private CubeMesh myCube = new CubeMesh();
         private Randomizer rng = new Randomizer(-1, 1);
+        private Vector3 velocity = new Vector3(1, 1, 0);
+
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
             OpenGL gl = args.OpenGL;
-
-            // Clear The Screen And The Depth Buffer
+            
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
 
-            // Move Left And Into The Screen
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -40.0f);
 
+            myCube.Position += velocity;
 
-            myCube.Position += new Vector3(rng.GenerateInt(), rng.GenerateInt(), rng.GenerateInt());
+            if(myCube.Position.x > 25)
+            {
+                velocity.x -= 1;
+            }
+
+            else if(myCube.Position.x < -25)
+            {
+                velocity.x += 1;
+            }
+
+            else if (myCube.Position.y > 15)
+            {
+                velocity.y -= 1;
+            }
+
+            else if (myCube.Position.y < -15)
+            {
+                velocity.y += 1;
+            }
             myCube.Draw(gl);
         }
 
