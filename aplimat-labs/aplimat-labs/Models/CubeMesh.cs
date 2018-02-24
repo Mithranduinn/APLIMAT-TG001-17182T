@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using aplimat_labs.Models;
+using SharpGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace aplimat_labs
 {
-    public class CubeMesh
-    {
-        public Vector3 Position;
-
+    public class CubeMesh : Movable
+    { 
         public CubeMesh()
         {
             this.Position = new Vector3();
@@ -58,6 +57,15 @@ namespace aplimat_labs
             gl.Vertex(this.Position.x - 0.5f, this.Position.y - 0.5f, this.Position.z - 0.5f);
             gl.Vertex(this.Position.x + 0.5f, this.Position.y - 0.5f, this.Position.z - 0.5f);
             gl.End();
+
+            UpdateMotion();
+        }
+
+        public void UpdateMotion()
+        {
+            this.Velocity += this.Acceleration;
+            this.Position += this.Velocity;
+            this.Acceleration *= 0;
         }
     }
 }

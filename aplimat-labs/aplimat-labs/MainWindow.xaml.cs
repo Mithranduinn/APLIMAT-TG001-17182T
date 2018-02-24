@@ -26,21 +26,44 @@ namespace aplimat_labs
         public MainWindow()
         {
             InitializeComponent();
-            this.KeyDown += new KeyEventHandler(MainWindow_KeyDown);
-            myVector = a - b;
-            Console.WriteLine(myVector.getMagnitude());
+            //this.KeyDown += new KeyEventHandler(MainWindow_KeyDown);
+             //myVector = a - b;
+             //Console.WriteLine(myVector.getMagnitude());
 
-            //while (true) Console.WriteLine(rng.Generate());
+                //while (true) Console.WriteLine(rng.Generate()); 
         }
 
-        private CubeMesh myCube = new CubeMesh();
-        private Randomizer rng = new Randomizer(-1, 1);
+        private CubeMesh lightCube = new CubeMesh()
+        {
+            Acceleration = new Vector3(-1.0f, 1.0f, 0),
+            Position = new Vector3(25,-10,0)
+        };
+
+        private CubeMesh mediumCube = new CubeMesh()
+        {
+            Acceleration = new Vector3(-1.0f, 1.0f, 0),
+            Mass = 3,
+            Position = new Vector3(25, -10, 0)
+        };
+
+        private CubeMesh heavyCube = new CubeMesh()
+        {
+            Acceleration = new Vector3(-1.0f, 1.0f, 0),
+            Position = new Vector3(25, -10, 0),
+            Mass = 5
+        };
+
+        private Vector3 wind = new Vector3(0.03f, 0, 0);
+        private Vector3 gravity = new Vector3(0, -0.02f, 0);
+
+        //private CubeMesh myCube = new CubeMesh();
+        /*private Randomizer rng = new Randomizer(-1, 1);
         private Vector3 velocity = new Vector3(1, 1, 0);
         private float speed = 2.0f;
 
         private Vector3 myVector = new Vector3();
         private Vector3 a = new Vector3(0, 0, 0);
-        private Vector3 b = new Vector3(5, 7, 0);
+        private Vector3 b = new Vector3(5, 7, 0);*/
 
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
@@ -50,26 +73,34 @@ namespace aplimat_labs
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -40.0f);
 
-            gl.LineWidth(4);
-            gl.Color(1.0f, 0.0f, 1.0f);
-            gl.Begin(OpenGL.GL_LINE_STRIP);
-            gl.Vertex(a.x, a.y);
-            gl.Vertex(b.x, b.y);
-            gl.End();
-
-            gl.LineWidth(1);
-            gl.Begin(OpenGL.GL_LINE_STRIP);
-            gl.Vertex(a.x, a.y);
-            gl.Vertex(b.x, b.y);
-            gl.End();
-
+        /*gl.LineWidth(4);
+        gl.Color(1.0f, 0.0f, 1.0f);
+        gl.Begin(OpenGL.GL_LINE_STRIP);
+        gl.Vertex(a.x, a.y);
+        gl.Vertex(b.x, b.y);
+        gl.End();
+        gl.LineWidth(1);
+        gl.Begin(OpenGL.GL_LINE_STRIP);
+        gl.Vertex(a.x, a.y);
+        gl.Vertex(b.x, b.y);
+        gl.End();
+        gl.DrawText(0, 0, 1, 1, 1, "Arial", 15, "Lightsaber magnitude is: " + myVector.getMagnitude());*/
             
+            lightCube.Draw(gl);
+            lightCube.ApplyForce(wind);
+            lightCube.ApplyForce(gravity);
 
-            gl.DrawText(0, 0, 1, 1, 1, "Arial", 15, "Lightsaber magnitude is: " + myVector.getMagnitude());
+            mediumCube.Draw(gl);
+            mediumCube.ApplyForce(wind);
+            mediumCube.ApplyForce(gravity);
 
+            heavyCube.Draw(gl);
+            heavyCube.ApplyForce(wind);
+            heavyCube.ApplyForce(gravity);
         }
 
-        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+
+        /*private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
             {
@@ -88,7 +119,7 @@ namespace aplimat_labs
                 default:
                     break;
             }
-        }
+        }*/
 
         private void OpenGLControl_OpenGLInitialized(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
